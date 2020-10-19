@@ -405,6 +405,49 @@ class TfPoseEstimator:
         return npimg_q
 
     @staticmethod
+    def getAllCoordinates(npimg, humans):
+        image_h, image_w = npimg.shape[:2]
+        centers = {}
+        BODY_PART_ENUM = {
+            0: "Nose",
+            1: "Neck",
+            2: "RShoulder",
+            3: "RElbow",
+            4: "RWrist",
+            5: "LShoulder",
+            6: "LElbow",
+            7: "LWrist",
+            8: "RHip",
+            9: "RKnee",
+            10: "RAnkle",
+            11: "LHip",
+            12: "LKnee",
+            13: "LAnkle",
+            14: "REye",
+            15: "LEye",
+            16: "REar",
+            17: "LEar",
+            18: "Background",
+        }
+
+        results = []
+        for human in humans:
+            # draw point
+            for i in range(common.CocoPart.Background.value):
+                if i not in human.body_parts.keys():
+                    continue
+                body_part = human.body_parts[i]
+                center = (int(body_part.x * image_w + 0.5), int(body_part.y * image_h + 0.5))
+                centers[i] = center
+                results.append({
+                    "name": BODY_PART_ENUM[i],
+                    "x": center[0],
+                    "y": center[1]
+                })
+
+        return results
+
+    @staticmethod
     def draw_humans(npimg, humans, imgcopy=False):
         if imgcopy:
             npimg = np.copy(npimg)

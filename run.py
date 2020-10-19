@@ -50,9 +50,12 @@ if __name__ == '__main__':
 
     logger.info('inference image: %s in %.4f seconds.' % (args.image, elapsed))
 
-    image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+    # image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
     try:
+        results = TfPoseEstimator.getAllCoordinates(image, humans)
+        print(results)
+
         import matplotlib.pyplot as plt
 
         fig = plt.figure()
